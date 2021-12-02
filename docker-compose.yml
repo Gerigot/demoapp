@@ -2,25 +2,26 @@ version: "3.3"
 
 services:
   mariadb:
-    image: mariadb
+    image: mariadb:10.7
     environment:
-      - "MARIADB_USER=example"
-      - "MARIADB_PASSWORD=example"
-      - "MARIADB_ROOT_PASSWORD=rootpass"
-      - "MARIADB_DATABASE=talks"
+      MARIADB_USER: example
+      MARIADB_PASSWORD: example
+      MARIADB_ROOT_PASSWORD: rootpass
+      MARIADB_DATABASE: talks
   backend:
     build: 
       context: ./backend
       dockerfile: Dockerfile
     image: selectparticipant-backend
     environment:
-      SPRING_APPLICATION_JSON: '{"spring":{"datasource":{"url":"jdbc:mariadb://mariadb:3306/talks"}}}' 
+      SPRING_APPLICATION_JSON: '{"spring":{"datasource":{"url":"jdbc:mariadb://mariadb:3306/talks?testdbautoReconnect=true"}}}' 
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.backend.rule=PathPrefix(`/api`)"
       - "traefik.http.services.backend.loadbalancer.server.port=8080"
     depends_on:
       - mariadb
+    restart: unless-stopped
   frontend:
     build: 
       context: ./frontend
