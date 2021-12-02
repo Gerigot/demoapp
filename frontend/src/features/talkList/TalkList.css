@@ -1,0 +1,12 @@
+.talkList-list {
+  display: grid;
+  gap: 2rem;
+  place-content: center;
+  grid-template-columns: repeat(auto-fill, 20rem);
+}
+
+.talkList-addButton {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+}
